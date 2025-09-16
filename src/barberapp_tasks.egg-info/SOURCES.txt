@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+src/app/__init__.py
+src/app/cli.py
+src/app/tasks.py
+src/barberapp_tasks.egg-info/PKG-INFO
+src/barberapp_tasks.egg-info/SOURCES.txt
+src/barberapp_tasks.egg-info/dependency_links.txt
+src/barberapp_tasks.egg-info/entry_points.txt
+src/barberapp_tasks.egg-info/top_level.txt
+tests/test_tasks.py
