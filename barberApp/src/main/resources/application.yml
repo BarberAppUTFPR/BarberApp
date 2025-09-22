@@ -1,0 +1,15 @@
+server:
+  port: ${PORT:8080}   # usa a variável PORT, ou 8080 se não estiver definida
+
+spring:
+  application:
+    name: barberApp    # nome da aplicação (aparece nos logs)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info   # expõe /actuator/health e /actuator/info
+  endpoint:
+    health:
+      show-details: never      # não mostra detalhes sensíveis do healthcheck
