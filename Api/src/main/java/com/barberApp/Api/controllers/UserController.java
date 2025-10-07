@@ -5,11 +5,12 @@ import com.barberApp.Api.dtos.GetUsersDTO;
 import com.barberApp.Api.infra.security.JwtUtils;
 import com.barberApp.Api.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/user")
@@ -25,10 +26,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Stream<GetUsersDTO>> getUsers() {
-
-        var users = userService.findAll();
-        return ResponseEntity.ok(users.stream().map(GetUsersDTO::new));
+    public ResponseEntity<Page<GetUsersDTO>> getUsers(Pageable pageable) {
+        var users = userService.findAll(pageable);
+        return ResponseEntity.ok(users.map(GetUsersDTO::new));
     }
 
     @GetMapping("/{id}")

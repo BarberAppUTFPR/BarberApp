@@ -6,13 +6,13 @@ import com.barberApp.Api.dtos.ScheduleDTO;
 import com.barberApp.Api.enums.ScheduleStatus;
 import com.barberApp.Api.services.ScheduleService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/schedule")
@@ -31,24 +31,24 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllSchedules() {
-        var schedules = scheduleService.findAll();
-        return ResponseEntity.ok(schedules);
+    public ResponseEntity<Page<ScheduleDTO>> getAllSchedules(Pageable pageable) {
+        var schedules = scheduleService.findAll(pageable);
+        return ResponseEntity.ok(schedules.map(ScheduleDTO::new));
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ScheduleDTO>> getSchedulesByUserId(@PathVariable UUID userId) {
-        var schedules = scheduleService.getSchedulesByUser(userId).stream().map(ScheduleDTO::new).toList();
-        return ResponseEntity.ok(schedules);
+    public ResponseEntity<Page<ScheduleDTO>> getSchedulesByUserId(@PathVariable UUID userId, Pageable pageable) {
+        var schedules = scheduleService.getSchedulesByUser(userId, pageable);
+        return ResponseEntity.ok(schedules.map(ScheduleDTO::new));
     }
 
     @GetMapping("/barber/{barberId}")
-    public ResponseEntity<List<ScheduleDTO>> getSchedulesByBarberAndStatus(@PathVariable UUID barberId, @RequestParam(required = false) String status) {
-        List<ScheduleDTO> schedules;
+    public ResponseEntity<Page<ScheduleDTO>> getSchedulesByBarberAndStatus(@PathVariable UUID barberId, @RequestParam(required = false) String status, Pageable pageable) {
+        Page<ScheduleDTO> schedules;
         if (status == null) {
-            schedules = scheduleService.getSchedulesByBarber(barberId).stream().map(ScheduleDTO::new).collect(Collectors.toList());
+            schedules = scheduleService.getSchedulesByBarber(barberId, pageable).map(ScheduleDTO::new);
         } else {
-            schedules = scheduleService.getSchedulesByBarberAndStatus(barberId, ScheduleStatus.valueOf(status)).stream().map(ScheduleDTO::new).collect(Collectors.toList());
+            schedules = scheduleService.getSchedulesByBarberAndStatus(barberId, ScheduleStatus.valueOf(status), pageable).map(ScheduleDTO::new);
         }
         return ResponseEntity.ok(schedules);
     }

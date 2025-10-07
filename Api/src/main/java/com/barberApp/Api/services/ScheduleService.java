@@ -12,12 +12,13 @@ import com.barberApp.Api.repositories.ScheduleRepository;
 import com.barberApp.Api.repositories.UserRepository;
 import com.barberApp.Api.user_cases.interfaces.schedule.ScheduleDataValidator;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 
 @Service
@@ -89,23 +90,23 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<Schedule> getSchedulesByBarber(UUID barberId) {
-        return scheduleRepository.findByBarber_Id(barberId);
+    public Page<Schedule> getSchedulesByBarber(UUID barberId, Pageable pageable) {
+        return scheduleRepository.findByBarber_Id(barberId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<Schedule> getSchedulesByBarberAndStatus(UUID barberId, ScheduleStatus status) {
-        return scheduleRepository.findSchedulesByBarber_idAndStatus(barberId, status);
+    public Page<Schedule> getSchedulesByBarberAndStatus(UUID barberId, ScheduleStatus status, Pageable pageable) {
+        return scheduleRepository.findSchedulesByBarber_idAndStatus(barberId, status, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<Schedule> getSchedulesByUser(UUID userId) {
-        return scheduleRepository.findByUserId(userId);
+    public Page<Schedule> getSchedulesByUser(UUID userId, Pageable pageable) {
+        return scheduleRepository.findByUserId(userId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public Stream<ScheduleDTO> findAll() {
-        return scheduleRepository.findAll().stream().map(ScheduleDTO::new);
+    public Page<Schedule> findAll(Pageable pageable) {
+        return scheduleRepository.findAll(pageable);
     }
 
     public Schedule getScheduleById(UUID scheduleId) {

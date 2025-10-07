@@ -5,10 +5,11 @@ import com.barberApp.Api.dtos.GetBarbersDTO;
 import com.barberApp.Api.infra.security.JwtUtils;
 import com.barberApp.Api.services.BarberService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,8 +25,8 @@ public class BarberController {
     }
     
     @GetMapping
-    public ResponseEntity<List<GetBarbersDTO>> getUsers() {
-        var barbers = barberService.findAll();
+    public ResponseEntity<Page<GetBarbersDTO>> getUsers(Pageable pageable) {
+        var barbers = barberService.findAll(pageable);
         return ResponseEntity.ok(barbers);
     }
 

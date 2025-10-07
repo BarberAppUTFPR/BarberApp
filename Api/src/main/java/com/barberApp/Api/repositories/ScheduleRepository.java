@@ -3,6 +3,8 @@ package com.barberApp.Api.repositories;
 import com.barberApp.Api.enums.ScheduleStatus;
 import com.barberApp.Api.models.Barber;
 import com.barberApp.Api.models.Schedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,10 +18,11 @@ import java.util.UUID;
 public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
     Boolean existsByBarberAndStartTime(Barber barber, LocalDateTime startTime);
 
-    List<Schedule> findByBarber_Id(UUID barberId);
+    Page<Schedule> findByBarber_Id(UUID barberId, Pageable pageable);
 
-    List<Schedule> findSchedulesByBarber_idAndStatus(UUID barberId, ScheduleStatus status);
-    List<Schedule> findByUserId(UUID userId);
+    Page<Schedule> findSchedulesByBarber_idAndStatus(UUID barberId, ScheduleStatus status, Pageable pageable);
+
+    Page<Schedule> findByUserId(UUID userId, Pageable pageable);
 
     @Query("SELECT s FROM Schedule s WHERE "
             + "s.barber = :barber AND "

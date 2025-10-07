@@ -17,6 +17,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -101,9 +103,9 @@ public class UserService {
     }
 
 
-    public List<User> findAll() {
-        return userRepository.findAll().stream().filter(user -> user.getUserRole() == User_Role.USER)
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findByUserRole(User_Role.USER, pageable);
     }
 
 
